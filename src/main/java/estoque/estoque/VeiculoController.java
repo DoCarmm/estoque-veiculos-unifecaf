@@ -31,4 +31,21 @@ public class VeiculoController {
     public void deletar(@PathVariable Long id) {
         repository.deleteById(id);
     }
+
+    @GetMapping("/filtro")
+    public List<Veiculo> filtrar(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String modelo,
+            @RequestParam(required = false) Integer ano,
+            @RequestParam(required = false) Double precoMaximo,
+            @RequestParam(required = false) String marca) {
+
+        if (status != null) return repository.findByStatusContainingIgnoreCase(status);
+        if (modelo != null) return repository.findByModeloContainingIgnoreCase(modelo);
+        if (ano != null) return repository.findByAno(ano);
+        if (precoMaximo != null) return repository.findByPrecoLessThanEqual(precoMaximo);
+        if (marca != null) return repository.findByMarcaNomeContainingIgnoreCase(marca);
+
+        return repository.findAll();
+    }
 }
